@@ -1,0 +1,88 @@
+h2 {
+    color: #355d8a;
+    text-align: center;
+    font-family: Lato;
+    font-size: 40px;
+    line-height: 150%;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #fafafa;
+}
+
+div.subheader {
+	margin-bottom: 30px;
+	color: #355d8a;
+    text-align: center;
+    font-family: Lato;
+    font-size: 20px;
+    line-height: 150%;
+    font-weight: 300;
+}
+
+form.well {
+	background-color: #355d8a;
+	box-shadow: inset 0 -3px 0 0 #e0e4e8, 
+	inset 0 -4px 0 0 #c8d0d9;
+}
+
+span.help-block {
+	color: white;
+    font-family: Lato;
+    font-size: 15px;
+    line-height: 2rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+p {
+	color: white;
+	font-family: Lato;
+    font-size: 15px;
+    line-height: 2rem;
+    font-weight: 500;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-top-style: dashed;
+}
+
+button.btn-default{
+	font-family: Lato;
+	text-transform: uppercase;
+	color: #fff;
+    background-color: #5dc0de;
+    border-color: #48b8da;
+}
+
+div#cta.shiny-html-output.shiny-bound-output{
+	font-family: Lato;
+	line-height: 150%;
+}
+
+
+h4 {
+	margin-top: 40px;
+}
+
+img.header-logo {
+	height:45px;
+	margin-top:10px;
+	align-items: right;
+}
+
+p.model-running {
+	font-family: Lato;
+	color: white;
+	font-size: 10px;
+	font-weight: 300;
+}
