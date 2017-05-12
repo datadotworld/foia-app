@@ -17,7 +17,7 @@ shinyUI(fluidPage(
       
       tags$hr(class="sidebar-break"),
       
-      textAreaInput("request_text", label = p("Your request text:"), height = '250px', 
+      textAreaInput("request_text", label = p('Your request text: (a.k.a. "description")'), height = '250px', 
                     placeholder = "Paste your request here (without greeting or salutation works best!)"),
       
       selectizeInput("agency", label = p("Please select your agency. If not listed, select 'Agency not listed'"),

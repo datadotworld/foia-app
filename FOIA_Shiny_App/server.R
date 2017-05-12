@@ -6,7 +6,7 @@ source("listAgencies.R")
 library(caret)
 
 # Read data into app
-recent_data <- read.csv("data/recent-requests-data-for-model.csv", stringsAsFactors = TRUE)
+recent_data <- read.csv("https://query.data.world/s/gnihglprzlg116azb6gjj3jd", header=T, stringsAsFactors = TRUE)
 # Create target variable for successful or not
 recent_data$successful_bool <- ifelse(recent_data$status == "done", 1, 0)
 recent_data$ref_fees <- as.numeric(recent_data$ref_fees)
@@ -118,56 +118,61 @@ shinyServer(function(input, output) {
       
       high_success_rate_agency <- ifelse(input$agency == "Agency not listed", 0, 1)
       
-      output$textResult <- renderText({ 
-        
-        validate(
-          need(input$request_text != "", "Please fill out the fields to the left.")
-        )
-        
-        textmined <- InputTextMining(input$request_text)
-
-        # If word count is smaller than 14, ask for longer request text.
-        if (textmined[1] < 14){
-          paste("ERROR: 90% of successful requests are longer than 10 words, please expand your request.")
-        }
-        else {
-          user_instance <- data.frame("ref_fees" = as.numeric(textmined[3]), 
-                                      "hyperlink" = as.numeric(textmined[5]),
-                                      "specificity" = as.numeric(textmined[7]),
-                                      "ref_foia" = as.numeric(textmined[4]),
-                                      "avg_sen_len" = as.numeric(textmined[2]),
-                                      "email_address" = as.numeric(textmined[6]),
-                                      "word_count" = as.integer(textmined[1]),
-                                      "high_success_rate_agency" = as.numeric(high_success_rate_agency))
-          
-          user_pred <- predict(knn_fit, newdata=user_instance)
-          
-          formated_prediction <- round(user_pred * 100, 0)
-          
-          paste("Your FOIA request has a", formated_prediction, "% chance of success")
-        }
-        
-      })
+      validate(
+        need(input$request_text != "", "Please fill out the fields to the left.")
+      )
       
-      output$cta <- renderUI({
-        ctaText <- '</br> 
-        This prediction was made using a K nearest neighbors classification algorithm with a test classification accuracy
-        rate of 80%. 
-        </br> This model is based off FOIA request data from the Muckrock API.
-        <a href = "https://data.world/rdowns26/foia-analysis"><b>View the data on data.world.</b></a>
-        </br>
-        Have ideas on how to improve our model? <a href = "#">Contribute to our open source project.</a>
-        </br>
-        <h4>What makes a FOIA more likely to be successful?</h4>
-        We found the following from our exploratory analysis:
-        <ul>
-          <li>finding number 1</li>
-          <li>finding number 2</li>
-          <li>finding number 3</li>
-        </ul>
-        '
-        HTML(paste(ctaText))
-      })
+      textmined <- InputTextMining(input$request_text)
+      
+      # If word count is smaller than 10, ask for longer request text.
+      if (textmined[1] < 10){
+        paste("ERROR: 90% of successful requests are longer than 10 words, please expand your request.")
+      }
+      else {
+      
+        output$textResult <- renderText({ 
+            user_instance <- data.frame("ref_fees" = as.numeric(textmined[3]), 
+                                        "hyperlink" = as.numeric(textmined[5]),
+                                        "specificity" = as.numeric(textmined[7]),
+                                        "ref_foia" = as.numeric(textmined[4]),
+                                        "avg_sen_len" = as.numeric(textmined[2]),
+                                        "email_address" = as.numeric(textmined[6]),
+                                        "word_count" = as.integer(textmined[1]),
+                                        "high_success_rate_agency" = as.numeric(high_success_rate_agency))
+            
+            user_pred <- predict(knn_fit, newdata=user_instance)
+            
+            formated_prediction <- round(user_pred * 100, 0)
+            
+            paste("Your FOIA request has a", formated_prediction, "% chance of success")
+          })
+        
+       
+        output$cta <- renderUI({
+          ctaText <- '</br> 
+          This prediction was made using a K nearest neighbors classification algorithm with a test classification accuracy
+          rate of 80%. 
+          </br> This model is based off FOIA request data from the Muckrock API where we deemed any request status as "done"
+          as a successful request.
+          <a href = "https://data.world/rdowns26/foia-analysis"><b>View the data on data.world.</b></a>
+          </br>
+          Have ideas on how to improve our model? <a href = "https://github.com/datadotworld/foia-app"><b>Contribute to our open source project!</b></a>
+          </br> </br> 
+          This prediction uses the following attributes of your request:
+          <ul>'
+          wordcountText <- paste('<li><b>Word Count:</b>',as.character(textmined[1]),"</li>")
+          avgsenlenText <- paste('<li><b>Average Sentence Length:</b>', as.character(round(textmined[2],2)),"</li>")
+          specificityText <- paste('<li><b>Specificity (measured by presence of nouns):</b>', as.character(textmined[7]),"</li>")
+          reffeesText <- paste('<li><b>References Fees:</b>', as.character(ifelse(textmined[3] == 0, "False","True")),"</li>")
+          reffoiaText <- paste('<li><b>References FOIA:</b>', as.character(ifelse(textmined[4] == 0, "False","True")),"</li>")
+          hyperlinkText <- paste('<li><b>Includes Hyperlink:</b>', as.character(ifelse(textmined[5] == 0, "False","True")),"</li>")
+          emailText <- paste('<li><b>Includes Email:</b>', as.character(ifelse(textmined[6] == 0, "False","True")),"</li>")
+          successagencyText <- paste('<li><b>Agency Requested has > 50% success rate:</b>', as.character(ifelse(high_success_rate_agency == 0, "False","True")),"</li></ul>")
+          
+          HTML(paste(ctaText,wordcountText,avgsenlenText,specificityText,reffeesText,reffoiaText,hyperlinkText,emailText,successagencyText))
+        }) 
+        
+      }
       
     }
   )

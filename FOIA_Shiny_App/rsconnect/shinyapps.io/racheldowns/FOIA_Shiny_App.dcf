@@ -3,8 +3,8 @@ title: FOIA_Shiny_App
 account: racheldowns
 server: shinyapps.io
 appId: 178871
-bundleId: 825273
+bundleId: 826242
 url: https://racheldowns.shinyapps.io/FOIA_Shiny_App/
-when: 1494563106.15839
+when: 1494620625.8378
 asMultiple: FALSE
 asStatic: FALSE

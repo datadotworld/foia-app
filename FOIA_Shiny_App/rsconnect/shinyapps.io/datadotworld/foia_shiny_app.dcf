@@ -1,0 +1,11 @@
+name: foia_shiny_app
+title: FOIA Shiny App
+account: datadotworld
+server: shinyapps.io
+appId: 180272
+bundleId: 826250
+url: https://datadotworld.shinyapps.io/foia_shiny_app/
+when: 1494621110.63859
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: data/.DS_Store|data/foia_agencies.csv|data/foia_agency_names.csv|data/recent-requests-data-for-model.csv|data/requests-data-for-model.csv|data/successful_agency_names.csv|www/bootstrap.css|www/poweredby_sparkle.psd
