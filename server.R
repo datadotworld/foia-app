@@ -27,8 +27,8 @@ testing <- recent_data[-intrain,]
 # Train model
 trctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
 set.seed(3333)
-knn_fit <- train(successful_bool ~ ref_fees + hyperlink + specificity + ref_foia + avg_sen_len + 
-                   email_address + word_count + high_success_rate_agency, 
+knn_fit <- train(successful_bool ~ ref_fees + hyperlink + specificity + ref_foia + avg_sen_len +
+                   email_address + word_count + high_success_rate_agency,
                  data = training, method = "knn",
                  trControl=trctrl,
                  preProcess = c("center", "scale"),
@@ -43,7 +43,7 @@ InputTextMining <- function(request_text){
   # Remove non ascii characters
   Encoding(request_text) <- "latin1"
   request_text <- iconv(request_text, "latin1", "ASCII", sub="")
-  
+
   # Lowercase text
   request_text <- tolower(request_text)
   # Get word count of lowercased text
@@ -59,7 +59,7 @@ InputTextMining <- function(request_text){
   else{
     avg_sen_len <- word_count
   }
-  
+
   # 1 or 0 for boolean presence
   match_fees <- c("fees")
   ref_fees <- ifelse(grepl(paste(match_fees,collapse="|"), request_text),1,0)
@@ -73,7 +73,7 @@ InputTextMining <- function(request_text){
   match_email <- c("([\\w\\-\\.]+@(\\w[\\w\\-]+\\.)+[\\w\\-]+)")
   email_address <- ifelse(grepl(paste(match_email,collapse="|"), request_text),1,0)
   email_address <- as.numeric(email_address)
-  
+
   tagPOS <-  function(x, ...) {
     s <- as.String(x)
     word_token_annotator <- Maxent_Word_Token_Annotator()
@@ -84,26 +84,26 @@ InputTextMining <- function(request_text){
     POStags <- unlist(lapply(a3w$features, `[[`, "POS"))
     return (POStags)
   }
-  
+
   # Function to return specificity score
   SpecificityScore <- function(pos_tags){
     counter <- 0
-    last_tag <- "" 
+    last_tag <- ""
     for (tag in pos_tags){
       if (tag=='NN' && last_tag!='NN'){
-        counter <- counter + 1 
+        counter <- counter + 1
       }
       if (tag!="." | tag!="," | tag!="?" | tag!="!"){
-        last_tag <- tag 
+        last_tag <- tag
       }
     }
     return (counter)
   }
-  
+
   pos_tags <-  tagPOS(request_text)
   specificity <- SpecificityScore(pos_tags)
   specificity <- as.numeric(specificity)
-  
+
   return (c(word_count, avg_sen_len, ref_fees, ref_foia, hyperlink, email_address, specificity))
 }
 
@@ -111,27 +111,27 @@ InputTextMining <- function(request_text){
 
 
 shinyServer(function(input, output) {
-  
+
   observeEvent(
     eventExpr = input[["submit_loc"]],
     handlerExpr = {
-      
+
       high_success_rate_agency <- ifelse(input$agency == "Agency not listed", 0, 1)
-      
+
       validate(
         need(input$request_text != "", "Please fill out the fields to the left.")
       )
-      
+
       textmined <- InputTextMining(input$request_text)
-      
+
       # If word count is smaller than 10, ask for longer request text.
       if (textmined[1] < 10){
         paste("ERROR: 90% of successful requests are longer than 10 words, please expand your request.")
       }
       else {
-      
-        output$textResult <- renderText({ 
-            user_instance <- data.frame("ref_fees" = as.numeric(textmined[3]), 
+
+        output$textResult <- renderText({
+            user_instance <- data.frame("ref_fees" = as.numeric(textmined[3]),
                                         "hyperlink" = as.numeric(textmined[5]),
                                         "specificity" = as.numeric(textmined[7]),
                                         "ref_foia" = as.numeric(textmined[4]),
@@ -139,25 +139,17 @@ shinyServer(function(input, output) {
                                         "email_address" = as.numeric(textmined[6]),
                                         "word_count" = as.integer(textmined[1]),
                                         "high_success_rate_agency" = as.numeric(high_success_rate_agency))
-            
+
             user_pred <- predict(knn_fit, newdata=user_instance)
-            
+
             formated_prediction <- round(user_pred * 100, 0)
-            
+
             paste("Your FOIA request has a", formated_prediction, "% chance of success")
           })
-        
-       
+
+
         output$cta <- renderUI({
-          ctaText <- '</br> 
-          This prediction was made using a K nearest neighbors classification algorithm with a test classification accuracy
-          rate of 80%. 
-          </br> This model is based off FOIA request data from the Muckrock API where we deemed any request status as "done"
-          as a successful request.
-          <a href = "https://data.world/rdowns26/foia-analysis"><b>View the data on data.world.</b></a>
-          </br>
-          Have ideas on how to improve our model? <a href = "https://github.com/datadotworld/foia-app"><b>Contribute to our open source project!</b></a>
-          </br> </br> 
+          ctaText <- '</br>
           This prediction uses the following attributes of your request:
           <ul>'
           wordcountText <- paste('<li><b>Word Count:</b>',as.character(textmined[1]),"</li>")
@@ -168,12 +160,12 @@ shinyServer(function(input, output) {
           hyperlinkText <- paste('<li><b>Includes Hyperlink:</b>', as.character(ifelse(textmined[5] == 0, "False","True")),"</li>")
           emailText <- paste('<li><b>Includes Email:</b>', as.character(ifelse(textmined[6] == 0, "False","True")),"</li>")
           successagencyText <- paste('<li><b>Agency Requested has > 50% success rate:</b>', as.character(ifelse(high_success_rate_agency == 0, "False","True")),"</li></ul>")
-          
+
           HTML(paste(ctaText,wordcountText,avgsenlenText,specificityText,reffeesText,reffoiaText,hyperlinkText,emailText,successagencyText))
-        }) 
-        
+        })
+
       }
-      
+
     }
   )
 
