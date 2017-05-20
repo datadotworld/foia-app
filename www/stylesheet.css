@@ -1,7 +1,7 @@
 h2 {
     color: #355d8a;
     text-align: center;
-    font-family: Lato;
+    font-family: Helvetica;
     font-size: 40px;
     line-height: 150%;
     font-weight: 400;
@@ -21,7 +21,7 @@ div.subheader {
 	margin-bottom: 30px;
 	color: #355d8a;
     text-align: center;
-    font-family: Lato;
+    font-family: Helvetica;
     font-size: 20px;
     line-height: 150%;
     font-weight: 300;
@@ -35,7 +35,7 @@ form.well {
 
 span.help-block {
 	color: white;
-    font-family: Lato;
+    font-family: Helvetica;
     font-size: 15px;
     line-height: 2rem;
     font-weight: 500;
@@ -44,7 +44,7 @@ span.help-block {
 
 p {
 	color: white;
-	font-family: Lato;
+	font-family: Helvetica;
     font-size: 15px;
     line-height: 2rem;
     font-weight: 500;
@@ -57,7 +57,7 @@ hr {
 }
 
 button.btn-default{
-	font-family: Lato;
+	font-family: Helvetica;
 	text-transform: uppercase;
 	color: #fff;
     background-color: #5dc0de;
@@ -65,7 +65,7 @@ button.btn-default{
 }
 
 div#cta.shiny-html-output.shiny-bound-output{
-	font-family: Lato;
+	font-family: Helvetica;
 	line-height: 150%;
 }
 
@@ -81,8 +81,21 @@ img.header-logo {
 }
 
 p.model-running {
-	font-family: Lato;
+	font-family: Helvetica;
 	color: white;
 	font-size: 10px;
 	font-weight: 300;
+}
+
+h3.text {
+	font-family: Helvetica;
+	color: #333;
+	font-size: 24px;
+	font-weight: 500;
+}
+
+p.text {
+	font-family: Helvetica;
+	color: #333;
+	font-size: 14px;
 }
