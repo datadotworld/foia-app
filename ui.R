@@ -3,21 +3,23 @@ source("listAgencies.R")
 shinyUI(
   fluidPage(
     theme = "stylesheet.css",
-    
+
     tags$a(
       href = 'http://data.world',
       tags$img(src = 'poweredby_sparkle.png', class = "header-logo")
     ),
-    
+
+    tags$head(includeScript("google-analytics.js")),
+
     titlePanel("Predict Your FOIA Request Success"),
-    
+
     headerPanel(
       tags$div(
         class = "subheader",
         "Does your FOIA have a shot? This model is trained on 9,000+ FOIA requests tracked by MuckRock."
       )
     ),
-    
+
     sidebarLayout(
       position = "left",
       sidebarPanel(
@@ -27,7 +29,7 @@ shinyUI(
           height = '250px',
           placeholder = "Paste your request here (without greeting or salutation works best!)"
         ),
-        
+
         selectizeInput(
           "agency",
           label = p("Select the agency, or 'Agency not listed'"),
@@ -35,13 +37,13 @@ shinyUI(
           selected = NULL,
           options = list(placeholder = 'Please select an agency')
         ),
-        
+
         actionButton(inputId = "submit_loc",
                      label = "Get prediction"),
-        
+
         tags$p(class = "model-running", "Note: getting your prediction may take a minute or so.")
       ),
-      
+
       mainPanel(
         h3(textOutput("textResult")),
         htmlOutput("cta"),
