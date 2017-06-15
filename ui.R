@@ -79,7 +79,14 @@ shinyUI(
            a(href = "http://racheldowns.co/", "Rachel Downs "),
            "for the idea and initial build"
     ),
-    br(),
-    br()
+    hr(),
+    tags$p(class = "footer",
+           a(href = "https://data.world/about", "About"),
+           a(href = "https://data.world/contact", "Contact"),
+           a(href = "https://data.world/policy", "Policy"),
+           a(href = "https://data.world/terms", "Terms"),
+           a(href = "https://data.world/privacy", "Privacy"),
+           "© 2017 data.world, inc"
+    )
   )
 )

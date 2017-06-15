@@ -99,3 +99,14 @@ p.text {
 	color: #333;
 	font-size: 14px;
 }
+
+.footer {
+	font-family: Helvetica;
+	font-size: 13px;
+	text-align:center;
+	color: #8c9caf;
+}
+
+.footer a {
+	margin-right: 10px;
+}
