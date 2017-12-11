@@ -16,7 +16,7 @@ shinyUI(
     headerPanel(
       tags$div(
         class = "subheader",
-        "Does your FOIA have a shot? This model is trained on 9,000+ FOIA requests tracked by MuckRock."
+        "This model is trained on 9,000+ FOIA requests tracked by MuckRock."
       )
     ),
 
@@ -54,12 +54,28 @@ shinyUI(
           FOIA, presence of hyperlinks, presence of email addresses, and success rate of agency."
         ),
         br(),
+        tags$b(class = "text",
+               "Please note:"),
+        tags$p(class = "text",
+               "A low probability should not deter you from filing your request—no predictive model is perfect!"
+        ),
+        tags$p(class = "text",
+               "Also, if the agency you have in mind is not listed, your FOIA can still succeed. Simply select 'Agency not listed.'"
+        ),
+        tags$h4(class = "text",
+               "Great FOIAs can change the world. What will yours uncover?"
+        ),
+        br(),
         tags$p(class = "text",
           "Improve this app and the predictive model! View the ",
           a(href = "https://data.world/rdowns26/foia-analysis", "data on data.world"),
           " and ",
           a(href = "https://github.com/datadotworld/foia-app", "the code on GitHub"),
           "."
+        ),
+        tags$p(class = "text",
+               a(href = "https://data.world/data-journalism", "Learn how"),
+               " data.world is democratizing data journalism."
         )
       )
     ),
